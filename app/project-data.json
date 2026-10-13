@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Onboarding",
+      "owner": "Maya Chen",
+      "status": "In progress",
+      "recentActivity": "Published the updated setup guide and collected feedback from the first review group.",
+      "priority": "High"
+    },
+    {
+      "name": "Release Readiness",
+      "owner": "Jordan Patel",
+      "status": "On track",
+      "recentActivity": "Completed the release checklist review; remaining verification is scheduled for Thursday.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Accessibility Improvements",
+      "owner": "Riley Morgan",
+      "status": "Needs attention",
+      "recentActivity": "Keyboard navigation checks found two focus-order issues awaiting fixes.",
+      "priority": "High"
+    },
+    {
+      "name": "Documentation Refresh",
+      "owner": "Sam Rivera",
+      "status": "Planned",
+      "recentActivity": "Agreed on the scope for the next documentation update with the maintainers.",
+      "priority": "Low"
+    }
+  ]
+}

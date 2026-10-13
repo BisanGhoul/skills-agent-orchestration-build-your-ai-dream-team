@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A quick overview of project ownership, status, activity, and priority.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="dashboard-header">
+        <h1>Project Pulse</h1>
+        <p>A snapshot of project ownership, progress, and current priorities.</p>
+      </header>
+
+      <p id="load-message" role="status" aria-live="polite">Loading project data…</p>
+      <section id="project-list" aria-label="Projects"></section>
+    </main>
+    <script>
+      const projectList = document.querySelector("#project-list");
+      const loadMessage = document.querySelector("#load-message");
+
+      function addProjectField(details, label, value) {
+        const term = document.createElement("dt");
+        term.textContent = label;
+
+        const description = document.createElement("dd");
+        description.textContent = value == null ? "Not provided" : String(value);
+
+        details.append(term, description);
+      }
+
+      function renderProjects(projects) {
+        const cards = document.createDocumentFragment();
+
+        for (const project of projects) {
+          const card = document.createElement("article");
+          card.className = "project-card";
+
+          const heading = document.createElement("h2");
+          heading.textContent = project.name == null ? "Unnamed project" : String(project.name);
+
+          const details = document.createElement("dl");
+          addProjectField(details, "Owner", project.owner);
+          addProjectField(details, "Status", project.status);
+          addProjectField(details, "Recent activity", project.recentActivity);
+          addProjectField(details, "Priority", project.priority);
+
+          card.append(heading, details);
+          cards.append(card);
+        }
+
+        projectList.replaceChildren(cards);
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+          if (!response.ok) {
+            throw new Error(`The server returned HTTP ${response.status}.`);
+          }
+
+          let data;
+          try {
+            data = await response.json();
+          } catch {
+            throw new Error("The project data file is not valid JSON.");
+          }
+
+          if (!data || !Array.isArray(data.projects)) {
+            loadMessage.textContent = "Project data is unavailable: expected a projects array.";
+            return;
+          }
+
+          if (data.projects.length === 0) {
+            loadMessage.textContent = "No projects are available yet.";
+            return;
+          }
+
+          renderProjects(data.projects);
+          loadMessage.textContent = `${data.projects.length} projects loaded.`;
+        } catch (error) {
+          const reason = error instanceof Error ? error.message : "An unexpected error occurred.";
+          loadMessage.textContent = `Unable to load project data. ${reason} Please try again when the dashboard server is available.`;
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>
